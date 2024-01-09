@@ -20,7 +20,6 @@ export default function App() {
       <Route path="/about" element={<About />} />
 
     </Routes>
-    <h1>App</h1>
    </Router>
   )
 }
