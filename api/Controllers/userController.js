@@ -1,4 +1,5 @@
 import asyncHandler from 'express-async-handler'
+import bcryptjs from 'bcryptjs'
 import User from '../Models/userModel.js'
 
 const getUser = asyncHandler(async(req, res) => {
@@ -23,10 +24,13 @@ const signUp = asyncHandler(async(req, res) => {
         throw new Error("User already exists")
     }
 
+    // Hash the password
+    const hashedPassword = bcryptjs.hashSync(password, 10)
+
     const user = await User.create({
         username,
         email,
-        password
+        password: hashedPassword
     })
 
     if(user) {
