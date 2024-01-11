@@ -132,9 +132,17 @@ const google = asyncHandler(async(req, res) => {
 })
 
 
+
+// Update User
+const updateUser = (req, res) => {
+    res.send("User Updated")
+}
+
+
 export{
     getUser,
     signUp,
     loginUser,
     google,
+    updateUser,
 }
