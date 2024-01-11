@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     },
     photo: {
         type: String,
-        default: "https://i.ibb.co/4pDNDk1/avatar.png",
+        default: "https://www.svgrepo.com/show/384674/account-avatar-profile-user-11.svg",
     },
 }, {timestamps: true})  
 
