@@ -14,7 +14,9 @@ router.get('/users', getUser)
 router.post('/signup', signUp)
 router.post('/signin', loginUser)
 router.post('/google', google)
-router.post('/update/:id', verifyToken, updateUser)
+
+
+router.patch('/update/:id', verifyToken, updateUser)
 
 
 

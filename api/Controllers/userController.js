@@ -134,9 +134,34 @@ const google = asyncHandler(async(req, res) => {
 
 
 // Update User
-const updateUser = (req, res) => {
-    res.send("User Updated")
-}
+const updateUser = asyncHandler(async(req, res) => {
+    if(req.user.id !== req.params.id) {
+        res.status(401)
+        throw new Error("Not Authorized")
+    }
+
+    try {
+        if(req.body.password) {
+            req.body.password = bcryptjs.hashSync(req.body.password, 10)
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(req.params.id,{
+            $set: {
+                username: req.body.username,
+                email: req.body.email,
+                password: req.body.password,
+                photo: req.body.photo
+            }
+        },{ new: true})
+
+        const {password, ...rest} = updatedUser._doc
+
+        res.status(200).json(rest)
+    } catch (error) {
+        console.error("Error in updating user:", error);
+        res.status(400).json({ message: "Not Authorized" })
+    }
+})
 
 
 export{
