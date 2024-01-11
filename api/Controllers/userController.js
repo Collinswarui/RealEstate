@@ -94,8 +94,47 @@ const loginUser = asyncHandler(async(req, res) => {
 })
 
 
+// Google signin & signup logic
+const google = asyncHandler(async(req, res) => {
+    try {
+        // Check the user returned from the rsult if they already exist
+        const user = await User.findOne({ email: req.body.email })
+
+        // If the user exists log them in
+         if(user) { 
+            const token = jwt.sign({id: user._id}, process.env.JWT_SECRET)
+            const { password: pass, ...rest } = user._doc
+            res.cookie('access_token', token, {httpOnly: true}).status(200).json(rest)
+
+            
+         } else{
+            // Genrate a random password and hash it
+            const generatedPassword = Math.random().toString(36).slice(-8)
+            const hashedPassword = bcryptjs.hashSync(generatedPassword, 10)
+
+            // Create a new user from the result from google
+            const newUser = new User({ 
+                username: req.body.name.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-8),
+                email: req.body.email,
+                password: hashedPassword,
+                photo: req.body.photo
+            })
+            await newUser.save()
+            const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET)
+            const { password: pass, ...rest } = newUser._doc
+            res.cookie('access_token', token, {httpOnly: true}).status(200).json(rest)
+         }
+    } catch (error) {
+        console.error("Error in Google sign-in:", error);
+        res.status(400).json({ success: false, message: "Invalid user details" })
+    
+    }
+})
+
+
 export{
     getUser,
     signUp,
     loginUser,
+    google,
 }
