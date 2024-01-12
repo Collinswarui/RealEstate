@@ -56,7 +56,7 @@ const handleFileUpload = (file) => {
            hidden
            accept='image/*' />
 
-        <img onClick={() => fileRef.current.click()} src={formData.photo || currentUser.photo} alt="Profile" 
+        <img onClick={() => fileRef.current.click()} src={formData.photo ||  currentUser.photo} alt="Profile" 
         className='rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2' />
 
         <p className='text-sm self-center '>
@@ -75,13 +75,20 @@ const handleFileUpload = (file) => {
         }
         </p>
 
-        <input type="text" 
-          placeholder='username' id='username' 
-          className='border p-3 rounded-lg' />
+        <input 
+          type="text" 
+          placeholder='username' 
+          id='username' 
+          defaultValue={currentUser.username}
+          className='border p-3 rounded-lg' 
+        />
 
-          <input type="email" 
-          placeholder='email' id='email'
-          className='border p-3 rounded-lg' />
+          <input 
+            type="email" 
+            placeholder='email' 
+            id='email'
+            defaultValue={currentUser.email}
+            className='border p-3 rounded-lg' />
 
           <input type="password" 
           placeholder='password' id='password'
