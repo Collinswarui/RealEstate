@@ -16,7 +16,7 @@ router.post('/signin', loginUser)
 router.post('/google', google)
 
 
-router.patch('/update/:id', verifyToken, updateUser)
+router.post('/update/:id', verifyToken, updateUser)
 
 
 

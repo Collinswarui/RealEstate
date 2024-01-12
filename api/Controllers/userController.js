@@ -159,7 +159,7 @@ const updateUser = asyncHandler(async(req, res) => {
         res.status(200).json(rest)
     } catch (error) {
         console.error("Error in updating user:", error);
-        res.status(400).json({ message: "Not Authorized" })
+        res.status(400).json({ message: "Not Authorized to continue with this action" })
     }
 })
 
