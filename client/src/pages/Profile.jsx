@@ -48,7 +48,6 @@ const handleFileUpload = (file) => {
 }
 
 
-console.log(currentUser._id)
 
 const handleChange = (e) => {
   setFormData({ ...formData, [e.target.id]: e.target.value})
@@ -56,9 +55,17 @@ const handleChange = (e) => {
 
 const handleSubmit = async(e) => {
   e.preventDefault()
+  
+
+  if (!currentUser || !currentUser.newUser || !currentUser.newUser._id) {
+    console.error("User or user ID is undefined");
+    return;
+  }
+
+  // dispatch(updateUserStart({ ...currentUser, ...formData }));
   try {
     
-    const res = await fetch (`/api/user/update/${currentUser._id}`,
+    const res = await fetch (`/api/user/update/${currentUser.newUser._id}`,
     {
       method: 'POST',
       headers: {

@@ -139,6 +139,9 @@ const updateUser = asyncHandler(async(req, res) => {
         res.status(401)
         throw new Error("Not Authorized")
     }
+    // const user = await User.findById(req.user._id)
+    
+
 
     try {
         if(req.body.password) {
@@ -159,10 +162,26 @@ const updateUser = asyncHandler(async(req, res) => {
         res.status(200).json(rest)
     } catch (error) {
         console.error("Error in updating user:", error);
-        res.status(400).json({ message: "Not Authorized to continue with this action" })
+        res.status(500).json({ message: "Internal Server error" })
     }
 })
 
+
+
+// Delete User
+const deleteUser = asyncHandler(async(req, res) => {
+    if(req.user.id !== req.params.id) {
+        res.status(401)
+        throw new Error("You can only delete your own account")
+    }
+    try {
+        await User.findByIdAndDelete(req.params.id)
+        res.status(200).json("User has been deleted")
+    } catch (error) {
+        console.error("unable to delete user:", error);
+        res.status(400).json({ message: "Not Authorized to continue with this action" })
+    }
+})
 
 export{
     getUser,
@@ -170,4 +189,5 @@ export{
     loginUser,
     google,
     updateUser,
+    deleteUser,
 }

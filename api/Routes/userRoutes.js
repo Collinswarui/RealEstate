@@ -1,5 +1,6 @@
 import express from 'express'
 import { 
+    deleteUser,
     getUser, 
     google, 
     loginUser, 
@@ -17,6 +18,9 @@ router.post('/google', google)
 
 
 router.post('/update/:id', verifyToken, updateUser)
+router.delete('/delete/:id', verifyToken, deleteUser)
+
+
 
 
 

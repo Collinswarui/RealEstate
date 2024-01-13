@@ -6,14 +6,12 @@ const verifyToken = (req, res,next) => {
     const token = req.cookies.access_token
 
     if(!token) {
-        res.status(401)
-        throw new Error("Unauthorized access")
+        return res.status(401).json({ error: "Unauthorized access" })
     }
 
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         if(err) {
-            res.status(403)
-            throw new Error("Forbidden")
+            return res.status(403).json({ error: "Forbidden" })
         } 
         
         req.user = user
