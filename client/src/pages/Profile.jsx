@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebase'
-import { deleteUserFailure, deleteUserStart, deleteUserSuccess, updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/user/userSlice'
+import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserFailure, signOutUserStart, signOutUserSuccess, updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/user/userSlice'
 
 
 export default function Profile() {
@@ -64,7 +64,8 @@ const handleSubmit = async(e) => {
 
   // dispatch(updateUserStart({ ...currentUser, ...formData }));
   try {
-    
+    dispatch(updateUserStart())
+
     const res = await fetch (`/api/user/update/${currentUser.newUser._id}`,
     {
       method: 'POST',
@@ -105,6 +106,25 @@ const handleDeleteUser = async () => {
   } catch (error) {
     dispatch(deleteUserFailure(error.message))
   }
+}
+
+
+const handleSignOut = async() => {
+  try {
+    dispatch(signOutUserStart())
+
+    const res = await fetch('/api/user/signout')
+    const data = await res.json()
+
+    if (data.success === false) {
+      dispatch(signOutUserFailure(data.message))
+      return
+    }
+
+    dispatch(signOutUserSuccess(data))
+  } catch (error) {
+    dispatch(signOutUserFailure(data.message))
+   }
 }
 
   return (
@@ -173,7 +193,7 @@ const handleDeleteUser = async () => {
         <span onClick={handleDeleteUser} className='text-red-700 cursor-pointer'>
           Delete Account
         </span>
-        <span className='text-red-700 cursor-pointer'>
+        <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>
           Sign Out
         </span>
       </div>
