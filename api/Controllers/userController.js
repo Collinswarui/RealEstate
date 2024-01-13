@@ -168,7 +168,7 @@ const updateUser = asyncHandler(async(req, res) => {
 
 
 
-// Delete User
+// Delete User account and delete user from the database
 const deleteUser = asyncHandler(async(req, res) => {
     if(req.user.id !== req.params.id) {
         res.status(401)
@@ -178,6 +178,7 @@ const deleteUser = asyncHandler(async(req, res) => {
     
     try {
         await User.findByIdAndDelete(req.params.id)
+        res.clearCookie('access_token')
         res.status(200).json("User has been deleted")
     } catch (error) {
         console.error("unable to delete user:", error);
