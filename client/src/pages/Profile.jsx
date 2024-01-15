@@ -59,7 +59,7 @@ const handleSubmit = async(e) => {
   
 
   if (!currentUser || !currentUser._id ) {
-    console.error("User or user ID is undefined");
+    console.error(currentUser);
     return;
   }
 
