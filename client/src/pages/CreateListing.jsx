@@ -1,8 +1,11 @@
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { useState } from 'react'
 import { app } from '../firebase'
+import { useSelector } from 'react-redux'
+
 
 export default function CreateListing() {
+    const {currentUser} = useSelector(state => state.user)
     const [files, setFiles] = useState([])
     const [formData, setFormData] = useState({
         imageURLs: [],
@@ -20,6 +23,8 @@ export default function CreateListing() {
     })
     const [imageUploadError, setImageUploadError] = useState(false)
     const [uploading, setUploading] = useState(false)
+    const [error, setError] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     console.log(formData);
     
@@ -103,12 +108,40 @@ export default function CreateListing() {
 
     }
 
+    const handleSubmit = async(e) => {
+        e.preventDefault()
 
+        try {
+            setLoading(true)
+            setError(false)
+
+            const res = await fetch('/api/listing/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ...formData,
+                    userRefs: currentUser._id, 
+                })
+            })
+
+            const data = await res.json()
+            setLoading(false)
+
+            if(data.success === false){
+                setError(data.message)
+            }
+        } catch (error) {
+            setError(error.message)
+            setLoading(false)
+        }
+    }
 
   return (
     <main className='p-3 max-w-4xl mx-auto'>
         <h1 className='text-xm sm:text-3xl font-semibold text-center my-7'>
-            Create Listing
+            Create Estate
         </h1>
         <form onSubmit={handleSubmit} className='flex flex-col sm:flex-row gap-4'>
             <div className='flex flex-col gap-4 flex-1'>
@@ -257,7 +290,7 @@ export default function CreateListing() {
                     className='p-3 text-green-700 border
                     border-green-700 rounded 
                     uppercase hover:shadow-lg disabled:opacity-80'>
-                        {uploading ? 'Uploading' : 'Upload'}
+                        {uploading ? 'Uploading...' : 'Upload'}
                     </button>
 
                 </div>
@@ -281,7 +314,12 @@ export default function CreateListing() {
                         </div>
                     ))
                 }
-                <button className='p-3 bg-slate-700 text-white rounded uppercase hover:opacity-90 disabled:opacity-80'>Create Listing</button>
+                <button className='p-3 bg-slate-700
+                 text-white rounded uppercase 
+                 hover:opacity-90 disabled:opacity-80'>
+                    {loading ? 'Creating...' : 'Create Estate'}
+                </button>
+                {error && <p className='text-red-700 text-sm'>{error}</p>}
             </div>
         </form>
     </main>

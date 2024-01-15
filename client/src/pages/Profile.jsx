@@ -58,7 +58,7 @@ const handleSubmit = async(e) => {
   e.preventDefault()
   
 
-  if (!currentUser || !currentUser.newUser || !currentUser.newUser._id) {
+  if (!currentUser || !currentUser._id ) {
     console.error("User or user ID is undefined");
     return;
   }
@@ -67,7 +67,7 @@ const handleSubmit = async(e) => {
   try {
     dispatch(updateUserStart())
 
-    const res = await fetch (`/api/user/update/${currentUser.newUser._id}`,
+    const res = await fetch (`/api/user/update/${currentUser._id}`,
     {
       method: 'POST',
       headers: {
