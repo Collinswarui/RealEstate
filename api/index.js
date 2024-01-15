@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import userRouter from './Routes/userRoutes.js'
+import listingRouter from './Routes/listingRoute.js'
 import { errorHandler } from './middleware/errorMiddleware.js'
 
 
@@ -29,6 +30,8 @@ app.use(cors())
 
 // Routes
 app.use("/api/user", userRouter)
+app.use("/api/listing", listingRouter)
+
 
 // Error middleware
 app.use(errorHandler) 
