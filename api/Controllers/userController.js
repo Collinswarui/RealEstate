@@ -2,10 +2,11 @@ import asyncHandler from 'express-async-handler'
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import User from '../Models/userModel.js'
+import Listing from '../Models/listingModel.js'
 
-const getUser = asyncHandler(async(req, res) => {
-    res.send("User found")
-})
+// const getUser = asyncHandler(async(req, res) => {
+//     res.send("User found")
+// })
 
 
 // User Sign Up
@@ -197,6 +198,19 @@ const signOut = asyncHandler(async(req, res) => {
     }
 })
 
+const getUserEstates = asyncHandler(async(req, res, next) => {
+    if(req.user.id === req.params.id) {
+        try {
+            const listings = await Listing.find({ userRefs: req.params.id })
+            res.status(200).json(listings)
+        } catch (error) {
+            next(error)
+        }
+    } else {
+        return next(errorHandler(401, 'You can only see your own estates'))
+    }
+})
+
 export{
     getUser,
     signUp,
@@ -205,4 +219,5 @@ export{
     updateUser,
     deleteUser,
     signOut,
+    getUserEstates,
 }
