@@ -229,17 +229,41 @@ const handleShowEstates = async() => {
         {showEstateError ? 'Error showing estates' : ''}
       </p>
         {userEstates && userEstates.length > 0 &&
-        userEstates.map((listing) => (
-          <div key={listing._id}
-          className='h-16 w-16 object-contain'>
+        <div className='flex flex-col gap-4'>
+          <h1 className='text-center mt-7 text-2xl 
+          font-semibold'>Your Estates</h1>
+          {userEstates.map((listing) => (
+          <div key={listing._id} 
+          className='border rounded-lg p-3 flex gap-4 justify-between
+          items-center'>
             <Link to={`/listing/${listing._id}`}> 
             {listing.imageUrls?.[0] && (
-          <img src={listing.imageUrls[0]} alt="estate images" />
+          <img src={listing.imageUrls[0]} 
+          alt="estate images"
+          className='h-16 w-16 object-contain'/>
             )}
             </Link>
-          </div>
+            <Link className='font-semibold text-slate-700
+             flex-1 hover:underline truncate'
+            to={`/listing/${listing._id}`}> 
+            <p >{listing.name}</p>
+            </Link>
 
-          ))
+            <div className='flex flex-col items-center font-semibold'>
+              <button className='text-red-700
+              uppercase'>
+                Delete
+              </button>
+              <button className='text-green-700
+              uppercase'>
+                Edit
+              </button>
+            </div>
+
+          </div>
+          ))}
+        </div>
+        
         }
     </div>
   )
