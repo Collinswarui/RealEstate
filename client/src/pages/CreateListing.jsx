@@ -10,7 +10,7 @@ export default function CreateListing() {
     const [files, setFiles] = useState([])
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
-        imageURLs: [],
+        imageUrls: [],
         name: '',
         description: '',
         address: '',
@@ -31,7 +31,7 @@ export default function CreateListing() {
     console.log(formData);
     
     const handleImageSubmit = (e) => {
-        if(files.length > 0 && files.length + formData.imageURLs.length < 7) {
+        if(files.length > 0 && files.length + formData.imageUrls.length < 7) {
             setUploading(true)
             setImageUploadError(false)
             const promises = []
@@ -40,7 +40,7 @@ export default function CreateListing() {
                 promises.push(storeImage(files[i]))
             }
             Promise.all(promises).then((urls) => {
-                setFormData({ ...formData, imageURLs: formData.imageURLs.concat(urls)})
+                setFormData({ ...formData, imageUrls: formData.imageUrls.concat(urls)})
                 setImageUploadError(false)
                 setUploading(false)
             }).catch((err) => {
@@ -81,7 +81,7 @@ export default function CreateListing() {
     const handleRemoveImage = (index) => {
         setFormData({
             ...formData,
-            imageURLs: formData.imageURLs.filter((_, i) => i !==
+            imageUrls: formData.imageUrls.filter((_, i) => i !==
             index),
         })
     }
@@ -114,7 +114,7 @@ export default function CreateListing() {
         e.preventDefault()
 
         try {
-            if(formData.imageURLs.length < 1) return setError('You must upload atleast one image')
+            if(formData.imageUrls.length < 1) return setError('You must upload atleast one image')
             if(+formData.regularPrice < +formData.discountPrice) 
             return setError('Discount price must be lower regular price')
 
@@ -308,7 +308,7 @@ export default function CreateListing() {
                 
                 <p className='text-red-700 text-sm '>{imageUploadError && imageUploadError}</p>
                 {
-                    formData.imageURLs.length > 0 && formData.imageURLs.map((url, index) => (
+                    formData.imageUrls.length > 0 && formData.imageUrls.map((url, index) => (
                         <div 
                         key={url}
                         className='flex justify-between p-3 border 

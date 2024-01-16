@@ -1,7 +1,6 @@
 import express from 'express'
 import { 
-    deleteUser,
-    getUser, 
+    deleteUser, 
     getUserEstates, 
     google, 
     loginUser, 
@@ -13,7 +12,7 @@ import { verifyToken } from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
-router.get('/listings/:id', verifyToken, getUserEstates)
+router.get('/listing/:id', verifyToken, getUserEstates)
 router.post('/signup', signUp)
 router.post('/signin', loginUser)
 router.post('/google', google)

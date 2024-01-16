@@ -51,48 +51,58 @@ const signUp = asyncHandler(async(req, res) => {
 
 // User Login
 const loginUser = asyncHandler(async(req, res) => {
-    const {email, password} = req.body
+    const {email, password} = req.body;
 
+    // User validation 
+    if(!email || !password) {
+        res.status(400).json({
+            success: false,
+            message: "Please input all the fields"
+        });
+        return;
+    }
 
-        // User validation 
-        if(!email || !password) {
-            res.status(400)
-            throw new Error("Please input all the fields")
-        }
-        
-        
+    try {
         // Check if the user exists
-        const user = await User.findOne({email})
+        const user = await User.findOne({email});
         if(!user) {
-            res.status(400)
-            throw new Error("User does not exist")
+            res.status(400).json({
+                success: false,
+                message: "User does not exist"
+            });
+            return;
         }
 
         // Compare the password entered by the user with hashed password in the database
-        const validPassword = bcryptjs.compareSync(password, user.password)
+        const validPassword = bcryptjs.compareSync(password, user.password);
         if(!validPassword) {
-            res.status(400)
-            throw new Error("Invalid Credentials")
+            res.status(400).json({
+                success: false,
+                message: "Invalid Credentials"
+            });
+            return;
         }
 
         // Create a token 
-        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET)
-        res.cookie('access_token', token, {httpOnly: true})
+        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET);
+        res.cookie('access_token', token, {httpOnly: true});
 
         // Return the user but exclude the password
-        const newUser = await User.findOne({email}).select("-password")
-        if(user && validPassword) {
-            res.status(201).json({
-               newUser
-            })
-        } else{
-            res.status(400)
-            throw new Error("Invalid User details")
+        const userWithoutPassword = await User.findOne({email}).select("-password");
+        if (user && validPassword) {
+            res.status(201).json(userWithoutPassword);
+        } else {
+            res.status(400).json({
+                success: false,
+                message: "Invalid User details"
+            });
         }
-   
-        
-    
-})
+    } catch (error) {
+        console.error("Error in user login:", error);
+        res.status(500).json({ message: "Internal Server error" });
+    }
+});
+
 
 
 // Google signin & signup logic
@@ -198,6 +208,9 @@ const signOut = asyncHandler(async(req, res) => {
     }
 })
 
+
+
+// Get the estates created by the user
 const getUserEstates = asyncHandler(async(req, res, next) => {
     if(req.user.id === req.params.id) {
         try {
@@ -212,7 +225,6 @@ const getUserEstates = asyncHandler(async(req, res, next) => {
 })
 
 export{
-    getUser,
     signUp,
     loginUser,
     google,

@@ -15,7 +15,8 @@ export default function Profile() {
   const [formData, setFormData] = useState({})
   const dispatch = useDispatch()
   const [updateSuccess, setUpdateSuccess] = useState(false)
-
+  const [showEstateError, setShowEstateError] = useState(false)
+  const[userEstates, setUserEstates] = useState([])
   
  
 useEffect(() => {
@@ -49,10 +50,11 @@ const handleFileUpload = (file) => {
 }
 
 
-
+// console.log(currentUser._id);
 const handleChange = (e) => {
-  setFormData({ ...formData, [e.target.id]: e.target.value})
-}
+  setFormData({ ...formData, [e.target.id]: e.target.value });
+};
+
 
 const handleSubmit = async(e) => {
   e.preventDefault()
@@ -60,6 +62,7 @@ const handleSubmit = async(e) => {
 
   if (!currentUser || !currentUser._id ) {
     console.error(currentUser);
+  
     return;
   }
 
@@ -128,6 +131,23 @@ const handleSignOut = async() => {
    }
 }
 
+const handleShowEstates = async() => {
+  try {  
+    setShowEstateError(false)
+
+    const res = await fetch(`/api/user/listing/${currentUser._id}`)
+    const data = await res.json()
+
+    if(data.success === false) {
+      setShowEstateError(true)
+      return 
+    }
+    setUserEstates(data)
+  } catch (error) {
+    setShowEstateError(true)
+  }
+}
+
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -191,7 +211,7 @@ const handleSignOut = async() => {
             </button>
             <Link className='bg-green-700 text-white p-3
             rounded-lg uppercase text-center hover:opacity-70' to={'/create-listing'}>
-              Create Listing 
+              Create Estate 
             </Link>
       </form>
       <div className='flex justify-between mt-5'>
@@ -204,6 +224,23 @@ const handleSignOut = async() => {
       </div>
       <p className='text-red-600 mt-5'>{error ? error : ''}</p>
       <p className='text-green-700 m-5'>{updateSuccess ? "Success" : ''}</p>
+      <button onClick={handleShowEstates} className='text-green-700 w-full'>Show Estates</button>
+      <p className='text-red-700 mt-5'>
+        {showEstateError ? 'Error showing estates' : ''}
+      </p>
+        {userEstates && userEstates.length > 0 &&
+        userEstates.map((listing) => (
+          <div key={listing._id}
+          className='h-16 w-16 object-contain'>
+            <Link to={`/listing/${listing._id}`}> 
+            {listing.imageUrls?.[0] && (
+          <img src={listing.imageUrls[0]} alt="estate images" />
+            )}
+            </Link>
+          </div>
+
+          ))
+        }
     </div>
   )
 }
