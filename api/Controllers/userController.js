@@ -225,6 +225,26 @@ const getUserEstates = asyncHandler(async(req, res, next) => {
     }
 })
 
+
+// Get User
+const getUser = asyncHandler(async(req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id)
+
+        if(!user) {
+            res.status(404)
+            throw new Error('User not found') 
+        }
+    
+        const { password: pass, ...rest} = user._doc
+    
+        res.status(200).json(rest)
+    } catch (error) {
+        next(error)
+    }
+   
+})
+
 export{
     signUp,
     loginUser,
@@ -233,4 +253,5 @@ export{
     deleteUser,
     signOut,
     getUserEstates,
+    getUser,
 }
