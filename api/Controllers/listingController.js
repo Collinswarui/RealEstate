@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler" 
 import Listing from "../Models/listingModel.js"
+import { errorHandler } from "../middleware/errorMiddleware.js"
 
 // Create a listing
 const createListing = asyncHandler(async(req, res, next) => {
@@ -12,6 +13,33 @@ const createListing = asyncHandler(async(req, res, next) => {
 })
 
 
+
+// Delete listing
+const deleteListing = asyncHandler(async(req, res, next) => {
+    const listing = await Listing.findById(req.params.id)
+
+    if(!listing) {
+        res.status(404)
+        throw new Error('Estate not found');
+        
+    }
+
+    if(req.user.id !== listing.userRefs) {
+        res.status(404)
+        throw new Error('You can only delete your own Estates')
+        
+    }
+
+    try {
+        await Listing.findByIdAndDelete(req.params.id)
+        res.status(200).json("Estate deleted successfully")
+    } catch (error) {
+        next(error)
+    }
+
+})
+
 export {
     createListing,
+    deleteListing,
 }
