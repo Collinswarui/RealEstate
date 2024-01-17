@@ -215,6 +215,7 @@ const handleListingDelete = async(listingId) => {
             type="email" 
             placeholder='email' 
             id='email'
+            disabled
             defaultValue={currentUser.email}
             className='border p-3 rounded-lg' 
             onChange={handleChange}
@@ -278,10 +279,13 @@ const handleListingDelete = async(listingId) => {
               uppercase'>
                 Delete
               </button>
+              <Link to={`/update-listing/${listing._id}`}>
               <button className='text-green-700
               uppercase'>
                 Edit
               </button>
+              </Link>
+             
             </div>
 
           </div>

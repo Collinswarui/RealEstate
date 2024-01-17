@@ -71,8 +71,25 @@ const updateListing = asyncHandler(async(req, res, next) => {
 
 })
 
+
+// Get listing
+const getListing = asyncHandler(async(req, res, next) => {
+    try {
+        const listing = await Listing.findById(req.params.id)
+
+        if(!listing) {
+            res.status(404)
+            throw new Error("Listing not found")
+        }
+        res.status(200).json(listing)
+    } catch (error) {
+        next(error)
+    }
+})
+
 export {
     createListing,
     deleteListing,
     updateListing,
+    getListing,
 }
