@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import SwiperCore from 'swiper'
 import {Navigation} from 'swiper/modules'
 import 'swiper/css/bundle'
-import { FaMapMarkerAlt, FaShare } from 'react-icons/fa'
+import { FaBath, FaBed, FaChair, FaMapMarkerAlt, FaParking, FaShare } from 'react-icons/fa'
 
 export default function Listing() {
     SwiperCore.use([Navigation])
@@ -95,14 +95,38 @@ export default function Listing() {
                 {listing.type === 'rent' ? 'For Rent' : 'For Sale'}
               </p>
               {listing.offer && (
-                <p className='bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md'>
+                <p className='bg-green-900 w-full max-w-[200px] text-white text-center font-semibold p-1 rounded-md'>
                 KES {listing.discountPrice.toLocaleString('en-US')} OFF
               </p>
               )}
             </div>
+            <p className='text-slate-800'>
+                <span className='font-semibold text-black'>Description - </span>
+                {listing.description}
+            </p>
+            <ul className='text-green-900 font-semibold text-sm flex flex-wrap items-center gap-4 sm:gap-6'>
+                <li className='flex items-center gap-1 whitespace-nowrap'>
+                    <FaBed className='text-xl'/>
+                    {listing.bedrooms > 1 ? `${listing.bedrooms} Bedrooms` : 
+                    `${listing.bedrooms} Bedroom`}
+                </li>
+                <li className='flex items-center gap-1 whitespace-nowrap'>
+                    <FaBath className='text-xl'/>
+                    {listing.bathrooms > 1 ? `${listing.bathrooms} Baths` : 
+                    `${listing.bathrooms} Bath`}
+                </li>
+                <li className='flex items-center gap-1 whitespace-nowrap'>
+                    <FaParking className='text-xl'/>
+                    {listing.parking ? 'Parking' : 'No Parking'}
+                </li>
+                <li className='flex items-center gap-1 whitespace-nowrap'>
+                    <FaChair className='text-xl'/>
+                    {listing.furnished ? 'Furnished' : 'Unfurnished'}
+                </li>
+            </ul>
         </div>
-
-            </div>
+            
+     </div>
         )}
     </main> 
   )
