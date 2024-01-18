@@ -97,7 +97,7 @@ const getListings = asyncHandler(async(req, res, next) => {
        
 
         // If offer is undefined or false search for both offers that are true or false in the database
-        let offer = req.body.offer
+        let offer = req.query.offer
         if(offer === undefined || offer === 'false') {
             offer = {$in: [false, true]}
         }
@@ -121,6 +121,7 @@ const getListings = asyncHandler(async(req, res, next) => {
         const searchTerm = req.query.searchTerm || ''
 
         const sort = req.query.sort || 'createdAt'
+        
 
         const order = req.query.order || 'desc'
 
