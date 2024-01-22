@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser'
 import userRouter from './Routes/userRoutes.js'
 import listingRouter from './Routes/listingRoute.js'
 import { errorHandler } from './middleware/errorMiddleware.js'
+import path from 'path'
 
 
 dotenv.config()
@@ -19,7 +20,7 @@ mongoose.connect(process.env.MONGO_URI)
     console.log(err)
 })
 
-
+const __dirname = path.resolve()
 
 const app = express()
 
@@ -32,6 +33,12 @@ app.use(cors())
 app.use("/api/user", userRouter)
 app.use("/api/listing", listingRouter)
 
+
+app.use(express.static(path.join(__dirname, '/client/dist')))
+
+app.get('*', (req,res) => {
+    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'))
+})
 
 // Error middleware
 app.use(errorHandler) 
